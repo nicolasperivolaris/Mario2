@@ -6,10 +6,21 @@ public class Movable : MonoBehaviour
 {
     public int UpSpeed = 16;
     public int HorSpeed = 7;
-
+    public Animator animator;
+    private State _state;
     public State state {
-        get; 
-        set; 
+        get {
+            return _state;
+        }
+        set{
+            try
+            {
+                animator.SetBool(_state.GetName(), false);
+                animator.SetBool(value.GetName(), true);
+            }
+            catch{ }
+            _state = value;
+        }
     }
 
     private void Start()
@@ -53,7 +64,6 @@ public class Movable : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
         if(state is Jumping) state = new Idling(this);
     }
 }

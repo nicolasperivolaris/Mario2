@@ -6,6 +6,7 @@ TagManager:
   tags:
   - QBox
   - BBox
+  - Goomba
   layers:
   - Default
   - TransparentFX

@@ -27,6 +27,11 @@ public class Running : State
     {
         return "Run";
     }
+
+    public override void Update()
+    {
+        if (Mathf.Abs(move.transform.GetComponent<Rigidbody2D>().velocity.x) < 1) move.state = new Idling(move);
+    }
 }
 public class Idling : State
 {
@@ -35,7 +40,7 @@ public class Idling : State
 
     public override void Update()
     {
-        if(move.transform.GetComponent<Rigidbody2D>().velocity.x>1) move.state = new Running(move);
+        if(Mathf.Abs(move.transform.GetComponent<Rigidbody2D>().velocity.x)>1) move.state = new Running(move);
     }
 
     public override string GetName()
