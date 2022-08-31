@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movable : MonoBehaviour
+/// <summary>
+/// Met en mouvement un <see cref="GameObject"/>
+/// </summary>
+public class Movable : Character
 {
     public int UpSpeed = 16;
     public int HorSpeed = 7;

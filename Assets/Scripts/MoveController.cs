@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveController : MonoBehaviour
+/// <summary>
+/// Permet de déplacer un <see cref="Movable"/> au clavier
+/// </summary>
+public class MoveController
 {
     private Movable Player;
     private GameObject Enemies;
     private static Command<Movable> Jump = new JumpCommand<Movable>();
     private static Command<Movable> Left = new LeftCommand<Movable>();
     private static Command<Movable> Right = new RightCommand<Movable>();
+    private Queue<Command<Movable>> CommandQueue = new Queue<Command<Movable>>();
     private bool _jumpLock = false;
     void Start()
     {
@@ -19,19 +23,21 @@ public class MoveController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Command<Movable> command = HandleInput();
-        command?.Execute(Player);
+        HandleInput();
+        foreach (Command<Movable> command in CommandQueue)
+        {
+            command?.Execute(Player);
+        }       
     }
 
-    private Command<Movable> HandleInput()
+    private void HandleInput()
     {
         float direction = Input.GetAxisRaw("Horizontal");
         
         if (!_jumpLock && (Input.GetButtonDown("Jump") || Input.GetAxisRaw("Vertical") == 1))
-            return Jump;
+            CommandQueue.Enqueue(Jump);
         if (direction != 0)
-            if(direction == 1) return Right;
-            else return Left;
-        else return null;
+            if(direction == 1) CommandQueue.Enqueue(Right);
+            else CommandQueue.Enqueue(Left);
     }
 }
