@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Permet de déplacer un <see cref="Movable"/> au clavier
 /// </summary>
-public class MoveController
+public class MoveController:MonoBehaviour
 {
     private Movable Player;
     private GameObject Enemies;
@@ -24,17 +24,17 @@ public class MoveController
     void Update()
     {
         HandleInput();
-        foreach (Command<Movable> command in CommandQueue)
+        while(CommandQueue.Count > 0)
         {
-            command?.Execute(Player);
-        }       
+            CommandQueue.Dequeue().Execute(Player);
+        }      
     }
 
     private void HandleInput()
     {
         float direction = Input.GetAxisRaw("Horizontal");
         
-        if (!_jumpLock && (Input.GetButtonDown("Jump") || Input.GetAxisRaw("Vertical") == 1))
+        if (!_jumpLock && Input.GetButtonDown("Jump"))
             CommandQueue.Enqueue(Jump);
         if (direction != 0)
             if(direction == 1) CommandQueue.Enqueue(Right);

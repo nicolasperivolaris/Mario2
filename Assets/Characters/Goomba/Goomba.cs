@@ -7,7 +7,7 @@ public class Goomba: Character, IObserver
 {
     private int direction = 1;
     public int HorSpeed = 3;
-    private bool _triggerLock;
+    private bool _inCollision;
 
     // Start is called before the first frame update
     void Start()
@@ -23,13 +23,13 @@ public class Goomba: Character, IObserver
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(!_triggerLock)
+        if(!_inCollision)
             direction = direction * -1;
-        _triggerLock = true;
+        _inCollision = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        _triggerLock = false;
+        _inCollision = false;
     }
 }

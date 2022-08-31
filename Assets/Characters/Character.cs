@@ -13,7 +13,7 @@ public class Character : MonoBehaviour, IObserver
         
     }
 
-    public void Update(IObservable observable)
+    void IObserver.Update(IObservable observable)
     {
         if (IsFrozen)
             GetComponent<Rigidbody2D>().velocity = _lastVelocity;
