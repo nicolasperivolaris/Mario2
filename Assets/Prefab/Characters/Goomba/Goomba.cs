@@ -20,14 +20,11 @@ public class Goomba: Character
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.tag.Equals("Ground")) return;
         if(!_inCollision)
             direction = direction * -1;
-        _inCollision = true;
-        if (collision.gameObject.tag.Equals("Player") && gameObject.active)
-        {
-            gameObject.SetActive(false);
-            Notify();
-        }
+        _inCollision = true; 
+        if (collision.name.Equals("Player") || collision.transform.parent.name.Equals("Player")) Notify();
     }
 
     private void OnTriggerExit2D(Collider2D collision)

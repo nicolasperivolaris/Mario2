@@ -17,24 +17,16 @@ public abstract class State
 
     public virtual void Update() 
     {
-        if (character.GetComponent<Rigidbody2D>().velocity.y < -1) character.State = new Falling(character); return;
-    }
-}
-
-public class Running : State
-{
-    public Running(Character character):base(character)
-    {}
-
-    public override string GetName()
-    {
-        return "Run";
-    }
-
-    public override void Update()
-    {
-        if (character.IsPNJ) character.HorizontalMove();
-        if (Mathf.Abs(character.transform.GetComponent<Rigidbody2D>().velocity.x) < 1) character.State = new Idling(character);
+        if (character.GetComponent<Rigidbody2D>().velocity.y < -1)
+        {
+            character.State = new Falling(character);
+            return;
+        }
+        else if (character.GetComponent<Rigidbody2D>().velocity.y < 0)
+        {
+            character.State = new Running(character);
+            return;
+        }
     }
 }
 public class Idling : State
@@ -53,6 +45,7 @@ public class Idling : State
         return "Idle";
     }
 }
+
 public class Falling : State
 {
     public Falling(Character character) : base(character)
@@ -72,4 +65,22 @@ public class Falling : State
 
         if ((character.transform.GetComponent<Rigidbody2D>().velocity.y) > -1) character.State = new Idling(character);
     }
+}
+
+public class Death : State
+{
+    public Death(Character character) : base(character)
+    {
+        character.gameObject.SetActive(false);
+    }
+
+    public override string GetName()
+    {
+        return "Dead";
+    }
+
+    public override void Update()
+    {    }
+    public override void Jump()
+    {    }
 }
