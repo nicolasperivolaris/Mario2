@@ -2,9 +2,9 @@
 
 public class Jumping : State
 {
-    public Jumping(Movable move) : base(move)
+    public Jumping(Character character) : base(character)
     {
-        move.GetComponent<Rigidbody2D>().velocity = new Vector2(move.GetComponent<Rigidbody2D>().velocity.x, move.UpSpeed);
+        character.GetComponent<Rigidbody2D>().velocity = new Vector2(character.GetComponent<Rigidbody2D>().velocity.x, character.UpSpeed);
     }
     public override string GetName()
     {
@@ -12,4 +12,5 @@ public class Jumping : State
     }
     public override void Jump()
     {}
+
 }

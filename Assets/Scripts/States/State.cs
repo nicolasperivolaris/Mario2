@@ -4,23 +4,26 @@ using UnityEngine;
 
 public abstract class State
 {
-    public State(Movable move)
+    public State(Character character)
     {
-        this.move = move;
+        this.character = character;
     }
-    public Movable move { get; set; }
+    public Character character { get; set; }
     public abstract string GetName();
     public virtual void Jump()
     {
-        move.state = new Jumping(move);
+        character.State = new Jumping(character);
     }
 
-    public virtual void Update() { }
+    public virtual void Update() 
+    {
+        if (character.GetComponent<Rigidbody2D>().velocity.y < -1) character.State = new Falling(character); return;
+    }
 }
 
 public class Running : State
 {
-    public Running(Movable move):base(move)
+    public Running(Character character):base(character)
     {}
 
     public override string GetName()
@@ -30,17 +33,19 @@ public class Running : State
 
     public override void Update()
     {
-        if (Mathf.Abs(move.transform.GetComponent<Rigidbody2D>().velocity.x) < 1) move.state = new Idling(move);
+        if (character.IsPNJ) character.HorizontalMove();
+        if (Mathf.Abs(character.transform.GetComponent<Rigidbody2D>().velocity.x) < 1) character.State = new Idling(character);
     }
 }
 public class Idling : State
 {
-    public Idling(Movable move):base(move)
+    public Idling(Character character):base(character)
     {}
 
     public override void Update()
     {
-        if(Mathf.Abs(move.transform.GetComponent<Rigidbody2D>().velocity.x)>1) move.state = new Running(move);
+        base.Update();
+        if (Mathf.Abs(character.transform.GetComponent<Rigidbody2D>().velocity.x)>1) character.State = new Running(character);
     }
 
     public override string GetName()
@@ -50,11 +55,21 @@ public class Idling : State
 }
 public class Falling : State
 {
-    public Falling(Movable move):base(move)
-    {}
+    public Falling(Character character) : base(character)
+    { }
 
     public override string GetName()
     {
         return "Fall";
+    }
+
+    public override void Jump()
+    {
+    }
+
+    public override void Update()
+    {
+
+        if ((character.transform.GetComponent<Rigidbody2D>().velocity.y) > -1) character.State = new Idling(character);
     }
 }

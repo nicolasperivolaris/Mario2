@@ -3,22 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goomba: Character, IObserver
+public class Goomba: Character
 {
-    private int direction = 1;
-    public int HorSpeed = 3;
     private bool _inCollision;
-
-    // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        Register(GUIController.Instance);
     }
 
-    // Update is called once per frame
-    void Update()
+    protected void Awake()
     {
-        if(!IsFrozen)
-            GetComponent<Rigidbody2D>().velocity = new Vector2(direction * HorSpeed, GetComponent<Rigidbody2D>().velocity.y);
+        HorSpeed = 3;
+        State = new Running(this);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,6 +23,11 @@ public class Goomba: Character, IObserver
         if(!_inCollision)
             direction = direction * -1;
         _inCollision = true;
+        if (collision.gameObject.tag.Equals("Player") && gameObject.active)
+        {
+            gameObject.SetActive(false);
+            Notify();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)

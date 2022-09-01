@@ -2,6 +2,9 @@
 {
     public interface IObserver
     {
-        public void Update(IObservable observable);
+    /// <summary>
+    /// Appelé en cas d'évènement
+    /// </summary>
+        public void Update(Observable observable);
     }
 }

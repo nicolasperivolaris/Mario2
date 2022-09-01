@@ -2,38 +2,35 @@ using Assets.Scripts.Observer;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class GUIController : MonoBehaviour, IObservable
+public class GUIController : MonoBehaviour, IObserver
 {
-    private List<IObserver> _observers = new List<IObserver>();
+    public static GUIController Instance { get; private set; }
+    private int coins = 0;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        if (Instance == null) Instance = this;
+        else throw new System.Exception("Can't create more than one GUIController");
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
-    public void notify()
+
+    void IObserver.Update(Observable observable)
     {
-        foreach (IObserver item in _observers)
+        if ((observable is Box) && ((Box)observable).Type == Box.BoxType.Coin
+            || observable is Character)
         {
-            item.Update(this);
+            ++coins;
+            GameObject.Find("Count").GetComponent<Text>().text = "Coins :" + coins;
         }
-    }
-
-    public void Register(IObserver observer)
-    {
-        _observers.Add(observer);
-    }
-
-    public void Unregister(IObserver observer)
-    {
-        _observers.Remove(observer);
+        else if (observable is EndFlag) ;
     }
 
 }
